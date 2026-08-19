@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String      @id @default(uuid())
+  role         String      @default("STUDENT") // STUDENT, STAFF, SUPER_ADMIN
+  matricNo     String?     @unique
+  name         String
+  email        String      @unique
+  phone        String      @unique
+  passwordHash String
+  isVerified   Boolean     @default(false)
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  submissions    FileSubmission[]
+  statusChanges  StatusHistory[]    @relation("ChangedByUser")
+  reviewedDocs   SubmittedDocument[] @relation("ReviewedByUser")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  code      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users             User[]
+  requiredDocuments RequiredDocument[]
+
+  @@map("departments")
+}
+
+model RequiredDocument {
+  id           String     @id @default(uuid())
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  name         String
+  description  String?
+  isMandatory  Boolean    @default(true)
+
+  submittedDocuments SubmittedDocument[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("required_documents")
+}
+
+model FileSubmission {
+  id                    String            @id @default(uuid())
+  userId                String
+  user                  User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  referenceNumber       String?           @unique
+  status                String            @default("DRAFT") // DRAFT, PENDING, UNDER_REVIEW, APPROVED, REJECTED
+  acknowledgementPdfUrl String?
+  submittedAt           DateTime?
+
+  submittedDocuments SubmittedDocument[]
+  statusHistories    StatusHistory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("file_submissions")
+}
+
+model SubmittedDocument {
+  id             String           @id @default(uuid())
+  submissionId   String
+  submission     FileSubmission   @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  documentTypeId String
+  documentType   RequiredDocument @relation(fields: [documentTypeId], references: [id], onDelete: Cascade)
+  fileUrl        String
+  fileName       String
+  fileSize       Int?
+  mimeType       String?
+  status         String           @default("PENDING") // PENDING, APPROVED, REJECTED
+  reviewedBy     String?
+  reviewer       User?            @relation("ReviewedByUser", fields: [reviewedBy], references: [id], onDelete: SetNull)
+  reviewComment  String?
+  uploadedAt     DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@map("submitted_documents")
+}
+
+model StatusHistory {
+  id           String         @id @default(uuid())
+  submissionId String
+  submission   FileSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  oldStatus    String
+  newStatus    String
+  changedBy    String
+  changer      User           @relation("ChangedByUser", fields: [changedBy], references: [id], onDelete: Cascade)
+  changedAt    DateTime       @default(now())
+
+  @@map("status_history")
+}
+
+model OtpVerification {
+  id         String   @id @default(uuid())
+  identifier String
+  code       String
+  expiresAt  DateTime
+  isUsed     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@map("otp_verifications")
+}
