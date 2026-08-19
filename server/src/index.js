@@ -42,6 +42,15 @@ app.get('/api/health', (req, res) => {
 // Centralized Error Handler
 app.use(errorHandler);
 
+// Serve Frontend Static Build in Production / Monorepo
+const clientDistPath = path.join(__dirname, '../../client/dist');
+app.use(express.static(clientDistPath));
+
+// Fallback all non-API GET routes to index.html for React Router SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(clientDistPath, 'index.html'));
+});
+
 // Start Express Server
 app.listen(PORT, () => {
   console.log(`\n======================================================`);

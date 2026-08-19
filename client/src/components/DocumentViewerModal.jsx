@@ -4,7 +4,7 @@ import { X, ExternalLink, Download, FileText } from 'lucide-react';
 export const DocumentViewerModal = ({ isOpen, onClose, document }) => {
   if (!isOpen || !document) return null;
 
-  const fileUrl = document.fileUrl ? (document.fileUrl.startsWith('http') ? document.fileUrl : `http://localhost:5000${document.fileUrl}`) : '';
+  const fileUrl = document.fileUrl ? (document.fileUrl.startsWith('http') ? document.fileUrl : document.fileUrl) : '';
   const isPdf = document.mimeType === 'application/pdf' || fileUrl.endsWith('.pdf');
   const isImage = document.mimeType?.startsWith('image/') || /\.(jpg|jpeg|png|webp)$/i.test(fileUrl);
 

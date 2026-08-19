@@ -69,7 +69,7 @@ export const AdminDashboard = () => {
     if (statusFilter) params.append('status', statusFilter);
     if (deptFilter) params.append('departmentId', deptFilter);
 
-    window.open(`http://localhost:5000/api/admin/reports/export?${params.toString()}`, '_blank');
+    window.open(`/api/admin/reports/export?${params.toString()}`, '_blank');
   };
 
   return (

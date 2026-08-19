@@ -25,7 +25,7 @@ export async function downloadAcknowledgementPdf(submissionId, referenceNumber =
   } catch (error) {
     console.error('Failed to download acknowledgement PDF via blob, trying token query fallback:', error);
     const token = localStorage.getItem('dfos_token');
-    const fallbackUrl = `http://localhost:5000/api/submissions/${submissionId}/acknowledgement?token=${token}`;
+    const fallbackUrl = `/api/submissions/${submissionId}/acknowledgement?token=${token}`;
     window.open(fallbackUrl, '_blank');
   }
 }

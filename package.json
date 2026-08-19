@@ -1,0 +1,21 @@
+{
+  "name": "di-fos",
+  "version": "1.0.0",
+  "description": "Digital File Opening System (DFOS) Monorepo",
+  "main": "server/src/index.js",
+  "scripts": {
+    "install:server": "npm --prefix server install",
+    "install:client": "npm --prefix client install",
+    "install:all": "npm install --prefix server && npm install --prefix client",
+    "prisma:generate": "npm --prefix server run prisma:generate",
+    "build:client": "npm --prefix client run build",
+    "build": "npm install --prefix server && npm install --prefix client && npm --prefix server run prisma:generate && npm --prefix client run build",
+    "start": "npm --prefix server start",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "dev": "npm --prefix server run dev"
+  },
+  "keywords": ["dfos", "monorepo", "render"],
+  "author": "",
+  "license": "ISC"
+}
