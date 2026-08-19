@@ -73,17 +73,9 @@ CREATE DATABASE dfos_db;
    ```bash
    cp .env.example .env
    ```
-   Update `.env` with your PostgreSQL database URL, JWT secret, and Termii API key:
-   ```env
-   PORT=5000
-   # Local Postgres example
-   DATABASE_URL="postgresql://postgres:postgres@localhost:5432/dfos_db?schema=public"
+ 
 
-   # Neon example (direct host, not pooler)
-   # DATABASE_URL="postgresql://neondb_owner:YOUR_PASSWORD@ep-dark-frog-ax8r9shp.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require"
-   JWT_SECRET="dfos_jwt_super_secret_key_2026_change_in_production"
-   TERMII_API_KEY="mock_termii_api_key" # Replace with your live Termii Key
-   TERMII_SENDER_ID="DFOS"
+
    ```
 
 3. Run Database Migrations & Prisma Client Generation:
